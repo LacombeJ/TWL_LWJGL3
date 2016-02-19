@@ -32,11 +32,7 @@ package de.matthiasmann.twl.input.lwjgl;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.input.Input;
 
-import org.lacombej.lwjgl.GLFWUtil;
 import org.lacombej.lwjgl.TLC;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
 /**
  * Input handling based on LWJGL's Mouse & Keyboard classes.
