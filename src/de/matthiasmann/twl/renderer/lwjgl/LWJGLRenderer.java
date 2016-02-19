@@ -95,7 +95,7 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
     private int height;
     private boolean hasScissor;
     private final TintStack tintStateRoot;
-    private final Cursor emptyCursor;
+    private final LWJGLCursor emptyCursor;
     private boolean useQuadsForLines;
     private boolean useSWMouseCursors;
     private SWCursor swCursor;
@@ -114,7 +114,7 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
     protected final Rect clipRectTemp;
     
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public LWJGLRenderer() throws LWJGLException {
+    public LWJGLRenderer() {
         this.ib16 = BufferUtils.createIntBuffer(16);
         this.textureAreas = new ArrayList<TextureArea>();
         this.rotatedTextureAreas = new ArrayList<TextureAreaRotated>();
@@ -128,10 +128,9 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
         GL11.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, ib16);
         maxTextureSize = ib16.get(0);
 
-        int minCursorSize = Cursor.getMinCursorSize();
-        IntBuffer tmp = BufferUtils.createIntBuffer(minCursorSize * minCursorSize);
-        emptyCursor = new Cursor(minCursorSize, minCursorSize,
-                minCursorSize/2, minCursorSize/2, 1, tmp, null);
+        //int minCursorSize = LWJGLCursor.getMinCursorSize();
+        ByteBuffer tmp = BufferUtils.createByteBuffer(4);
+        emptyCursor = new LWJGLCursor(tmp,LWJGLTexture.Format.RGBA,1,1,1,1,1,1,1);
             
         swCursorAnimState = new SWCursorAnimState();
     }
@@ -478,20 +477,14 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
     }
 
     public void setCursor(MouseCursor cursor) {
-        try {
-            swCursor = null;
-            if(isMouseInsideWindow()) {
-                if(cursor instanceof LWJGLCursor) {
-                    setNativeCursor(((LWJGLCursor)cursor).cursor);
-                } else if(cursor instanceof SWCursor) {
-                    setNativeCursor(emptyCursor);
-                    swCursor = (SWCursor)cursor;
-                } else {
-                    setNativeCursor(null);
-                }
+        swCursor = null;
+        if(isMouseInsideWindow()) {
+            if(cursor instanceof LWJGLCursor) {
+                TLC.setCursor(((LWJGLCursor)cursor).glfwCursor);
+            } else if(cursor instanceof SWCursor) {
+                TLC.setCursor(emptyCursor.glfwCursor);
+                swCursor = (SWCursor)cursor;
             }
-        } catch(LWJGLException ex) {
-            getLogger().log(Level.WARNING, "Could not set native cursor", ex);
         }
     }
 
@@ -607,10 +600,6 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
             tintStack = tintStateRoot;
             swCursor.render(mouseX, mouseY);
         }
-    }
-    
-    protected void setNativeCursor(Cursor cursor) throws LWJGLException {
-        Mouse.setNativeCursor(cursor);
     }
     
     protected boolean isMouseInsideWindow() {

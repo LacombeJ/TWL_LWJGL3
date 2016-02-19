@@ -46,4 +46,8 @@ public class TLC {
         return GLFW.glfwGetTime() / 1000;
     }
     
+    public static void setCursor(long cursorID) {
+        GLFW.glfwSetCursor(windowID, cursorID);
+    }
+    
 }

@@ -32,12 +32,8 @@ package de.matthiasmann.twleffects.lwjgl;
 import de.matthiasmann.twl.Rect;
 import de.matthiasmann.twl.renderer.OffscreenRenderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLContext;
-
 /**
  *
  * @author Matthias Mann
@@ -46,7 +42,7 @@ public class LWJGLEffectsRenderer extends LWJGLRenderer {
 
     private final LWJGLOffscreenRenderer offscreenRenderer;
     
-    public LWJGLEffectsRenderer() throws LWJGLException {
+    public LWJGLEffectsRenderer() {
         super();
         
         GLCapabilities caps = GL.getCapabilities();
