@@ -44,6 +44,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.lacombej.twl.TLC;
+
 /**
  * Root of a UI tree. Handles timing, mouse and keyboard events, popups, tooltips etc.
  * 
@@ -541,7 +543,9 @@ public final class GUI extends Widget {
     }
     
     /**
-     * Polls inputs, updates layout and renders the GUI by calls the following method:<ol>
+     * First calls updates the TLC then polls inputs, updates layout
+     * and renders the GUI by calls the following methods:<ol>
+     * <li> {@link org.lacombej.twl.TLC#update() }
      * <li> {@link #setSize() }
      * <li> {@link #updateTime() }
      * <li> {@link #handleInput() }
@@ -560,6 +564,7 @@ public final class GUI extends Widget {
      * in the right order. See the javadoc of the individual methods for details.</p>
      */
     public void update() {
+        TLC.update();
         setSize();
         updateTime();
         handleInput();

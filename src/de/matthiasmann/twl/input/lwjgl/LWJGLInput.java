@@ -44,7 +44,7 @@ public class LWJGLInput implements Input {
     private boolean wasActive;
 
     public boolean pollInput(GUI gui) {
-        boolean active = TLC.isWindowActive();
+        boolean active = TLC.window().isActive();
         if(wasActive && !active) {
             wasActive = false;
             return false;

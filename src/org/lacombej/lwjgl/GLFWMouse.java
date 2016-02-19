@@ -3,7 +3,7 @@ package org.lacombej.lwjgl;
 import java.nio.DoubleBuffer;
 import java.util.ArrayDeque;
 import org.lacombej.twl.Mouse;
-import org.lacombej.twl.TLC;
+import org.lacombej.twl.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -18,7 +18,7 @@ import de.matthiasmann.twl.Event;
  */
 public class GLFWMouse implements Mouse {
 
-    private final long windowID;
+    private final Window window;
     private final int[] eventButtons;
     private final boolean[] buttonDown;
     
@@ -35,8 +35,8 @@ public class GLFWMouse implements Mouse {
     private final GLFWScrollCallback scrollCallback;
     private int scrollDY;
     
-    public GLFWMouse(long windowID) {
-        this.windowID = windowID;
+    public GLFWMouse(Window window) {
+        this.window = window;
         eventButtons = new int[]{Event.MOUSE_LBUTTON, Event.MOUSE_RBUTTON, Event.MOUSE_MBUTTON};
         buttonDown = new boolean[3];
         xBuffer = BufferUtils.createDoubleBuffer(1);
@@ -51,12 +51,12 @@ public class GLFWMouse implements Mouse {
     
     /** Called every frame */
     public void update() {
-        GLFW.glfwGetCursorPos(windowID,xBuffer,yBuffer);
+        GLFW.glfwGetCursorPos(window.id(),xBuffer,yBuffer);
         x = (int) Math.floor(xBuffer.get(0));
         y = (int) Math.floor(yBuffer.get(0));
-        y = TLC.getWindowWidth() - y;
+        y = window.height() - y;
         for (int i=0; i<eventButtons.length; i++) {
-            int action = GLFW.glfwGetMouseButton(windowID, eventButtons[i]);
+            int action = GLFW.glfwGetMouseButton(window.id(), eventButtons[i]);
             switch (action) {
             case GLFW.GLFW_PRESS:
                 if (!buttonDown[i]) {
@@ -110,7 +110,7 @@ public class GLFWMouse implements Mouse {
 
     @Override
     public boolean isInsideWindow() {
-        return TLC.isInsideWindow(x, y);
+        return x>=0 && x<=window.width() && y>=0 && y<=window.height();
     }
     
     class ButtonEvent {

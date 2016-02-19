@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 
 import org.lacombej.twl.Keyboard;
+import org.lacombej.twl.Window;
 import org.lwjgl.glfw.GLFW;
 
 import de.matthiasmann.twl.Event;
@@ -17,15 +18,15 @@ import de.matthiasmann.twl.Event;
  */
 public class GLFWKeyboard implements Keyboard {
 
-    private final long windowID;
+    private final Window window;
     private final int[] eventKeys;
     private final boolean[] keyDown;
     
     private final ArrayDeque<KeyEvent> eventQueue = new ArrayDeque<>();
     private KeyEvent event = null;
     
-    public GLFWKeyboard(long windowID) {
-        this.windowID = windowID;
+    public GLFWKeyboard(Window window) {
+        this.window = window;
         eventKeys = getEventKeys();
         keyDown = new boolean[eventKeys.length];
     }
@@ -33,7 +34,7 @@ public class GLFWKeyboard implements Keyboard {
     /** Called every frame */
     public void update() {
         for (int i=0; i<eventKeys.length; i++) {
-            int action = GLFW.glfwGetKey(windowID, eventKeys[i]);
+            int action = GLFW.glfwGetKey(window.id(), eventKeys[i]);
             switch (action) {
             case GLFW.GLFW_PRESS:
                 if (!keyDown[i]) {

@@ -61,7 +61,6 @@ import java.util.logging.Logger;
 
 import org.lacombej.twl.TLC;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.ARBTextureRectangle;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -480,9 +479,9 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
         swCursor = null;
         if(isMouseInsideWindow()) {
             if(cursor instanceof LWJGLCursor) {
-                TLC.setCursor(((LWJGLCursor)cursor).glfwCursor);
+                TLC.window().setCursor(((LWJGLCursor)cursor).glfwCursor);
             } else if(cursor instanceof SWCursor) {
-                TLC.setCursor(emptyCursor.glfwCursor);
+                TLC.window().setCursor(emptyCursor.glfwCursor);
                 swCursor = (SWCursor)cursor;
             }
         }
