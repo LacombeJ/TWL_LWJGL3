@@ -39,4 +39,7 @@ public interface Mouse {
     /** @return true if button was pressed or false if released */
     public boolean getEventButtonState();
     
+    /** @return true if mouse is inside window */
+    public boolean isInsideWindow();
+    
 }

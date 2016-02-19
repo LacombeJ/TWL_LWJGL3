@@ -2,6 +2,9 @@ package org.lacombej.lwjgl;
 
 import org.lacombej.twl.Keyboard;
 import org.lacombej.twl.Mouse;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLUtil;
 
 /**
  * Utility class used to handle TWL- LWJGL communication
@@ -12,6 +15,7 @@ import org.lacombej.twl.Mouse;
 public class TLC {
 
     private static long windowID;
+    private static GLUtil util;
     
     public static void create(long windowID) {
         TLC.windowID = windowID;
@@ -29,8 +33,17 @@ public class TLC {
         return true; //TODO
     }
     
-    public long getWindowID() {
+    public static long getWindowID() {
         return windowID;
+    }
+    
+    public static void checkGLError() {
+        util.checkGLError();
+    }
+    
+    /** @return time in milliseconds since window was created */
+    public static double getTime() {
+        return GLFW.glfwGetTime() / 1000;
     }
     
 }

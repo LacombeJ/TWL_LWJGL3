@@ -34,6 +34,8 @@ import de.matthiasmann.twl.renderer.OffscreenRenderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextCapabilities;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLContext;
 
 /**
@@ -47,7 +49,7 @@ public class LWJGLEffectsRenderer extends LWJGLRenderer {
     public LWJGLEffectsRenderer() throws LWJGLException {
         super();
         
-        ContextCapabilities caps = GLContext.getCapabilities();
+        GLCapabilities caps = GL.getCapabilities();
         if(caps.GL_EXT_framebuffer_object && caps.OpenGL14) {
             offscreenRenderer = new LWJGLOffscreenRenderer(this);
         } else {
