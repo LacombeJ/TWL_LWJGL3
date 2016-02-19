@@ -29,10 +29,10 @@
  */
 package de.matthiasmann.twl.input.lwjgl;
 
+import org.lacombej.twl.TLC;
+
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.input.Input;
-
-import org.lacombej.lwjgl.TLC;
 
 /**
  * Input handling based on LWJGL's Mouse & Keyboard classes.

@@ -44,7 +44,7 @@ class LWJGLCursor implements MouseCursor {
 
     LWJGLCursor(ByteBuffer src, LWJGLTexture.Format srcFmt, int srcStride,
             int x, int y, int width, int height, int hotSpotX, int hotSpotY) {
-        int dstSize = Math.max(width, height);
+        int dstSize = Math.max( Math.max(width, height), 4 );
 
         //capacity*4 for each r,g,b,a byte
         ByteBuffer buf = BufferUtils.createByteBuffer(dstSize*dstSize*4);

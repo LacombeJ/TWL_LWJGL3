@@ -59,7 +59,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.lacombej.lwjgl.TLC;
+import org.lacombej.twl.TLC;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ARBTextureRectangle;
@@ -130,7 +130,7 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
 
         //int minCursorSize = LWJGLCursor.getMinCursorSize();
         ByteBuffer tmp = BufferUtils.createByteBuffer(4);
-        emptyCursor = new LWJGLCursor(tmp,LWJGLTexture.Format.RGBA,1,1,1,1,1,1,1);
+        emptyCursor = new LWJGLCursor(tmp,LWJGLTexture.Format.RGBA,0,0,0,1,1,1,1);
             
         swCursorAnimState = new SWCursorAnimState();
     }

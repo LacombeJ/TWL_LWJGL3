@@ -37,9 +37,8 @@ import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lacombej.test.Window;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -48,14 +47,18 @@ import org.lwjgl.opengl.GL11;
  */
 public class SimpleGameMenu extends Widget {
 
+    private static Window window;
+    
     public static void main(String[] args) {
         try {
-            Display.setDisplayMode(new DisplayMode(800, 600));
-            Display.create();
-            Display.setTitle("TWL Simple Game Menu Demo");
-            Display.setVSyncEnabled(true);
+            //Display.setDisplayMode(new DisplayMode(800, 600));
+            //Display.create();
+            //Display.setTitle("TWL Simple Game Menu Demo");
+            //Display.setVSyncEnabled(true);
+            window = new Window("TWL Simple Game Menu Demo",800,600);
+            TLC.create(window.id);
             
-            Mouse.create();
+            //Mouse.create();
             
             LWJGLRenderer renderer = new LWJGLRenderer();
             SimpleGameMenu gameUI = new SimpleGameMenu();
@@ -65,11 +68,11 @@ public class SimpleGameMenu extends Widget {
                     SimpleGameMenu.class.getResource("simpleGameMenu.xml"), renderer);
             gui.applyTheme(theme);
             
-            while(!Display.isCloseRequested() && !gameUI.quit) {
+            while(window.isRunning() && !gameUI.quit) {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
                 gui.update();
-                Display.update();
+                window.update();
             }
 
             gui.destroy();
@@ -77,7 +80,7 @@ public class SimpleGameMenu extends Widget {
         } catch (Exception ex) {
             TestUtils.showErrMsg(ex);
         }
-        Display.destroy();
+        window.destroy();
     }
 
     private final FPSCounter fpsCounter;

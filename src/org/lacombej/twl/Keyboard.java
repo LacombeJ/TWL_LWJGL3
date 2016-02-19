@@ -7,7 +7,7 @@ package org.lacombej.twl;
  *
  */
 public interface Keyboard {
-
+    
     /**
      * Gets the next Keyboard event. After this is called you can:
      * </br>

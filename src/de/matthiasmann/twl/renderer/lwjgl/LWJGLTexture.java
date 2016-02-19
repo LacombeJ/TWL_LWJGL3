@@ -39,7 +39,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import org.lacombej.lwjgl.TLC;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.EXTABGR;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;

@@ -31,10 +31,6 @@ package test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -53,7 +49,6 @@ public final class TestUtils {
         PrintWriter pw = new PrintWriter(sw);
         ex.printStackTrace(pw);
         pw.flush();
-        Sys.alert("Error!", sw.toString());
     }
 
     /**
@@ -63,8 +58,5 @@ public final class TestUtils {
      */
     public static void reduceInputLag() {
         GL11.glGetError();          // this call will burn the time between vsyncs
-        Display.processMessages();  // process new native messages since Display.update();
-        Mouse.poll();               // now update Mouse events
-        Keyboard.poll();            // and Keyboard too
     }
 }
