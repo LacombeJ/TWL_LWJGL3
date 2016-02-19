@@ -24,7 +24,10 @@ public interface Keyboard {
     /** @return the key corresponding to the event */
     public int getEventKey();
     
-    /** @return the character for the event */
+    /**
+     * If the key is released Event.CHAR_NONE should be returned ('\0')
+     * @return the character for the event
+     */
     public char getEventCharacter();
     
     /** @return true if key was pressed or false if released */
