@@ -56,6 +56,7 @@ public class SimpleGameMenu extends Widget {
             //Display.setTitle("TWL Simple Game Menu Demo");
             //Display.setVSyncEnabled(true);
             window = new Window("TWL Simple Game Menu Demo",800,600);
+            
             TLC.create(window.id);
             
             //Mouse.create();
@@ -70,7 +71,8 @@ public class SimpleGameMenu extends Widget {
             
             while(window.isRunning() && !gameUI.quit) {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
+                TLC.update();
+                
                 gui.update();
                 window.update();
             }

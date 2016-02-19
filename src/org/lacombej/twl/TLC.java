@@ -6,7 +6,9 @@ import org.lacombej.lwjgl.GLFWKeyboard;
 import org.lacombej.lwjgl.GLFWMouse;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.opengl.OpenGLException;
 
 /**
  * Utility class used to handle TWL- LWJGL communication
@@ -17,7 +19,6 @@ import org.lwjgl.opengl.GLUtil;
 public class TLC {
 
     private static long windowID;
-    private static GLUtil util;
     
     private static GLFWKeyboard keyboard;
     private static GLFWMouse mouse;
@@ -36,12 +37,14 @@ public class TLC {
     public static void create(long windowID) {
         TLC.windowID = windowID;
         keyboard = new GLFWKeyboard(windowID);
+        mouse = new GLFWMouse(windowID);
     }
     
     public static void update() {
         GLFW.glfwGetWindowSize(windowID, BUFFER_0, BUFFER_1);
         windowWidth = BUFFER_0.get(0);
         windowHeight = BUFFER_1.get(0);
+        System.out.println(windowWidth+" "+windowHeight);
         keyboard.update();
         mouse.update();
     }
@@ -66,8 +69,18 @@ public class TLC {
         return windowID;
     }
     
-    public static void checkGLError() {
-        util.checkGLError();
+    public static int getWindowWidth() {
+        return windowWidth;
+    }
+    
+    public static int getWindowHeight() {
+        return windowHeight;
+    }
+    
+    public static void checkGLError() throws OpenGLException {
+        int err = GL11.glGetError();
+        if ( err != GL11.GL_NO_ERROR )
+            throw new OpenGLException(err);
     }
     
     /** @return time in milliseconds since window was created */

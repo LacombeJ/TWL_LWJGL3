@@ -544,15 +544,29 @@ public final class Event {
     
     static {
         try {
+            Field[] fields = Event.class.getFields();
+            int keyCount = 0;
+            for (Field f : fields) {
+                String name = f.getName();
+                if (name.startsWith(("KEY_"))) {
+                    int code = f.getInt(null);
+                    name = name.substring(4);
+                    KEY_NAMES[keyCount++] = name;
+                    KEY_MAP.put(name, code);
+                }
+            }
+            /*
             for(Field f : Event.class.getFields()) {
                 String name = f.getName();
                 if(name.startsWith("KEY_")) {
-                    Integer code = (Integer)f.get(null);
+                    System.out.println(name);
+                    int code = 0;
                     name = name.substring(4);
                     KEY_NAMES[code] = name;
                     KEY_MAP.put(name, code);
                 }
             }
+            */
         } catch (Throwable ignore) {
         }
     }

@@ -54,6 +54,7 @@ public class GLFWMouse implements Mouse {
         GLFW.glfwGetCursorPos(windowID,xBuffer,yBuffer);
         x = (int) Math.floor(xBuffer.get(0));
         y = (int) Math.floor(yBuffer.get(0));
+        y = TLC.getWindowWidth() - y;
         for (int i=0; i<eventButtons.length; i++) {
             int action = GLFW.glfwGetMouseButton(windowID, eventButtons[i]);
             switch (action) {
