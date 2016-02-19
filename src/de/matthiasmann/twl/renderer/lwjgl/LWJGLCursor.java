@@ -87,8 +87,9 @@ class LWJGLCursor implements MouseCursor {
         
     }
 
+    //Will be destroyed by glfwTerminate
     void destroy() {
-        GLFW.glfwDestroyCursor(glfwCursor);
+        //GLFW.glfwDestroyCursor(glfwCursor);
     }
 
 }

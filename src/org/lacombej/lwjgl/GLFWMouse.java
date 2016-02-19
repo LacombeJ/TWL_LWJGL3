@@ -20,7 +20,6 @@ public class GLFWMouse implements Mouse {
 
     private final Window window;
     private final int[] eventButtons;
-    private final boolean[] buttonDown;
     
     private final ArrayDeque<ButtonEvent> eventQueue = new ArrayDeque<>();
     private ButtonEvent event = null;
@@ -38,7 +37,6 @@ public class GLFWMouse implements Mouse {
     public GLFWMouse(Window window) {
         this.window = window;
         eventButtons = new int[]{Event.MOUSE_LBUTTON, Event.MOUSE_RBUTTON, Event.MOUSE_MBUTTON};
-        buttonDown = new boolean[3];
         xBuffer = BufferUtils.createDoubleBuffer(1);
         yBuffer = BufferUtils.createDoubleBuffer(1);
         scrollCallback = new GLFWScrollCallback() {
@@ -59,16 +57,10 @@ public class GLFWMouse implements Mouse {
             int action = GLFW.glfwGetMouseButton(window.id(), eventButtons[i]);
             switch (action) {
             case GLFW.GLFW_PRESS:
-                if (!buttonDown[i]) {
-                    eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,true));
-                }
-                buttonDown[i] = true;
+                eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,true));
                 break;
             case GLFW.GLFW_RELEASE:
-                if (buttonDown[i]) {
-                    eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,false));
-                }
-                buttonDown[i] = false;
+                eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,false));
                 break;
             }
         }

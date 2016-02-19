@@ -19,6 +19,10 @@ public class TLC {
         window = new GLFWWindow(windowID);
     }
     
+    /**
+     * Make sure create method is called before this method is called
+     * @see #create(long)
+     */
     public static void update() {
         window.update();
     }

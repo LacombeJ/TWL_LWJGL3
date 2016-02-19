@@ -47,11 +47,10 @@ import de.matthiasmann.twl.model.PersistentIntegerModel;
 import de.matthiasmann.twl.model.SimpleBooleanModel;
 import de.matthiasmann.twleffects.lwjgl.LWJGLEffectsRenderer;
 import java.io.IOException;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+
+import org.lacombej.test.Window;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.PixelFormat;
 
 /**
  * A simple test for TWL.
@@ -81,9 +80,9 @@ public class SimpleTest {
         }
     }
     
-    public static void main(String[] arg) throws LWJGLException {
+    public static void main(String[] arg) {
         SimpleTest test = new SimpleTest();
-        test.run(new VideoMode(new DisplayMode(WIDTH, HEIGHT), false));
+        test.run();
     }
 
     private static final String[] THEME_FILES = {
@@ -91,7 +90,8 @@ public class SimpleTest {
         "guiTheme.xml"
     };
 
-    protected final DisplayMode desktopMode;
+    private Window window;
+    
     protected boolean closeRequested;
     protected ThemeManager theme;
     protected LWJGLRenderer renderer;
@@ -100,7 +100,6 @@ public class SimpleTest {
     protected PersistentIntegerModel curThemeIdx;
 
     public SimpleTest() {
-        desktopMode = Display.getDisplayMode();
         curThemeIdx = new PersistentIntegerModel(
                 AppletPreferences.userNodeForPackage(SimpleTest.class),
                 "currentThemeIndex", 0, THEME_FILES.length, 0);
@@ -131,17 +130,15 @@ public class SimpleTest {
         gui.setBackground(theme.getImageNoWarning("gui.background"));
     }
 
-    private void createDisplay(VideoMode mode) throws LWJGLException {
-        Display.setTitle("TWL Examples");
-        Display.setFullscreen(mode.fullscreen);
-        Display.setDisplayMode(mode.mode);
-        Display.create(new PixelFormat(0, 0, 0));
-        Display.setVSyncEnabled(true);
+    private void createDisplay() {
+        window = new Window("TWL Examples");
+        
+        TLC.create(window.id);
         //Display.setResizable(true);
     }
 
     @SuppressWarnings("SleepWhileInLoop")
-    public void mainLoop(boolean isApplet) throws LWJGLException, IOException {
+    public void mainLoop(boolean isApplet) throws IOException {
         final RootPane root = new RootPane();
         //renderer = new LWJGLRenderer();
         renderer = new LWJGLEffectsRenderer();
@@ -149,7 +146,7 @@ public class SimpleTest {
         gui = new GUI(root, renderer);
 
         loadTheme();
-
+        
         WidgetsDemoDialog1 dlg1 = new WidgetsDemoDialog1();
         root.desk.add(dlg1);
         dlg1.adjustSize();
@@ -201,19 +198,11 @@ public class SimpleTest {
         fCS.addCloseCallback();
 
         final PopupWindow settingsDlg = new PopupWindow(root);
-        final VideoSettings settings = new VideoSettings(
-                AppletPreferences.userNodeForPackage(VideoSettings.class),
-                desktopMode);
+        
         settingsDlg.setTheme("settingdialog");
-        settingsDlg.add(settings);
+        //settingsDlg.add(settings);
         settingsDlg.setCloseOnClickedOutside(false);
-        settings.setTheme("settings");
-        settings.addCallback(new CallbackWithReason<VideoSettings.CallbackReason>() {
-            public void callback(VideoSettings.CallbackReason reason) {
-                vidDlgCloseReason = reason;
-                settingsDlg.closePopup();
-            }
-        });
+
 
         root.addButton("Exit", new Runnable() {
             public void run() {
@@ -225,7 +214,7 @@ public class SimpleTest {
         if(!isApplet) {
             root.addButton("Settings", "Opens a dialog which might be used to change video settings", new Runnable() {
                 public void run() {
-                    settings.readSettings();
+                    //settings.readSettings();
                     settingsDlg.openPopupCentered();
                 }
             });
@@ -258,33 +247,35 @@ public class SimpleTest {
 
         fInfo.requestKeyboardFocus();
 
-        while(!Display.isCloseRequested() && !closeRequested) {
+        while(window.isRunning() && !closeRequested) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             gui.update();
-            Display.update();
+            window.update();
 
             if(root.reduceLag) {
                 TestUtils.reduceInputLag();
             }
 
             if(!isApplet && vidDlgCloseReason == VideoSettings.CallbackReason.ACCEPT) {
-                settings.storeSettings();
-                VideoMode vm = settings.getSelectedVideoMode();
-                gui.destroy();
-                renderer.getActiveCacheContext().destroy();
-                Display.destroy();
-                createDisplay(vm);
-                loadTheme();
+                //settings.storeSettings();
+                //VideoMode vm = settings.getSelectedVideoMode();
+                //gui.destroy();
+                //renderer.getActiveCacheContext().destroy();
+                //window.destroy();
+                //createDisplay(vm);
+                //loadTheme();
+                System.out.println("???");
             }
             vidDlgCloseReason = null;
 
-            if(!Display.isActive()) {
+            if(!TLC.window().isActive()) {
                 gui.clearKeyboardState();
                 gui.clearMouseState();
             }
             
-            if(!Display.isVisible()) {
+            //If window is not visible / is hidden
+            if(false) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException unused) {
@@ -302,16 +293,16 @@ public class SimpleTest {
         return ta;
     }
 
-    public void run(VideoMode mode) {
+    public void run() {
         try {
-            createDisplay(mode);
+            createDisplay();
 
             mainLoop(false);
         } catch (Throwable ex) {
             TestUtils.showErrMsg(ex);
         }
 
-        Display.destroy();
+        window.destroy();
         System.exit(0);
     }
 
@@ -336,7 +327,7 @@ public class SimpleTest {
             final SimpleBooleanModel vsyncModel = new SimpleBooleanModel(true);
             vsyncModel.addCallback(new Runnable() {
                 public void run() {
-                    Display.setVSyncEnabled(vsyncModel.getValue());
+                    //Display.setVSyncEnabled(vsyncModel.getValue());
                 }
             });
 
