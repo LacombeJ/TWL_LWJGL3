@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="lib/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-2.9.3/lwjgl.jar" sourcepath="lib/lwjgl-2.9.3/lwjgl-source-2.9.3.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TWL_LWJGL3/lib/lwjgl-2.9.3/lwjgl-docs-2.9.3.zip!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="TWL_LWJGL3/lib/lwjgl-2.9.3/native/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
