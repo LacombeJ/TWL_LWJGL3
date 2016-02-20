@@ -38,11 +38,10 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import de.matthiasmann.twl.theme.ThemeManager;
 import java.io.IOException;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+
+import org.lacombej.test.Window;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.PixelFormat;
 
 /**
  *
@@ -50,12 +49,13 @@ import org.lwjgl.opengl.PixelFormat;
  */
 public class TabbedPaneTest {
 
-    public static void main(String[] arg) throws LWJGLException, IOException {
-        Display.setTitle("TWL TabbedPane Example");
-        Display.setDisplayMode(new DisplayMode(800, 600));
-        Display.create(new PixelFormat(0, 0, 0));
-        Display.setVSyncEnabled(true);
-
+    static Window window;
+    
+    public static void main(String[] arg) throws IOException {
+        window = new Window("TWL TabbedPane Example");
+        
+        TLC.create(window.id);
+        
         final TabbedPane tabbedPane = new TabbedPane();
 
         LWJGLRenderer renderer = new LWJGLRenderer();
@@ -70,14 +70,14 @@ public class TabbedPaneTest {
         tabbedPane.addTab("Image", createScrollPane());
         tabbedPane.addTab("Empty", null);
 
-        while(!Display.isCloseRequested()) {
+        while(window.isRunning()) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             gui.update();
-            Display.update();
+            window.update();
         }
 
-        Display.destroy();
+        window.destroy();
     }
 
     private static Widget createInfoPane() {

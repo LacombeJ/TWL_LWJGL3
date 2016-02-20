@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 /**
- * Window class
+ * Window class used to replace lwjgl2 Display
  * 
  * @author Jonathan Lacombe
  *

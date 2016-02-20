@@ -49,10 +49,12 @@ import de.matthiasmann.twl.textarea.Value;
 import de.matthiasmann.twl.theme.ThemeManager;
 import de.matthiasmann.twl.utils.TextUtil;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+
+import org.lacombej.test.Window;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
 import test.TestUtils;
 
@@ -62,22 +64,23 @@ import test.TestUtils;
  */
 public class TextAreaDemo extends DesktopArea {
 
+    static Window window;
+    
     public static void main(String[] args) {
         try {
-            Display.setDisplayMode(new DisplayMode(800, 600));
-            Display.create();
-            Display.setTitle("TWL TextArea Demo");
-            Display.setVSyncEnabled(true);
+            window = new Window("TWL TextArea Demo");
 
+            TLC.create(window.id);
+            
             LWJGLRenderer renderer = new LWJGLRenderer();
             TextAreaDemo demo = new TextAreaDemo();
             GUI gui = new GUI(demo, renderer);
 
             ThemeManager theme = ThemeManager.createThemeManager(
-                    TextAreaDemo.class.getResource("demo.xml"), renderer);
+                    new URL("file:src/textarea/demo.xml"), renderer);
             gui.applyTheme(theme);
 
-            while(!Display.isCloseRequested() && !demo.quit) {
+            while(window.isRunning() && !demo.quit) {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
                 gui.update();
@@ -85,10 +88,10 @@ public class TextAreaDemo extends DesktopArea {
                 /**
                  * requires LWJGL 2.4 - for 2.3 just call Display.update()
                  */
-                Display.update(false);
+                window.update();
                 GL11.glGetError();  // force sync with multi threaded GL driver
-                Display.sync(60);   // ensure 60Hz even without vsync
-                Display.processMessages();  // now process inputs
+                //Display.sync(60);   // ensure 60Hz even without vsync
+                //Display.processMessages();  // now process inputs
             }
 
             gui.destroy();
@@ -96,7 +99,7 @@ public class TextAreaDemo extends DesktopArea {
         } catch (Exception ex) {
             TestUtils.showErrMsg(ex);
         }
-        Display.destroy();
+        window.destroy();
     }
 
     private final FPSCounter fpsCounter;

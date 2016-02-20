@@ -1,7 +1,7 @@
 package test;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lacombej.test.Window;
+import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.Button;
@@ -21,7 +21,7 @@ import de.matthiasmann.twl.theme.ThemeManager;
  * @author NateS
  */
 public class TwlTest {
-
+    
     private LWJGLRenderer renderer;
     private ThemeManager theme;
     private GUI gui;
@@ -64,10 +64,10 @@ public class TwlTest {
     }
     
     public void run() {
-        while(!Display.isCloseRequested()) {
+        while(window.isRunning()) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
             gui.update();
-            Display.update();
+            window.update();
             TestUtils.reduceInputLag();
         }
     }
@@ -119,11 +119,13 @@ public class TwlTest {
         }
     }
 
+    static Window window;
+    
     public static void main(String[] args) throws Exception {
-        Display.setTitle("TWL Examples");
-        Display.setDisplayMode(new DisplayMode(800, 600));
-        Display.setVSyncEnabled(true);
-        Display.create();
+        window = new Window("TWL Examples",800,600);
+        
+        TLC.create(window.id);
+        
         TwlTest twlTest = new TwlTest();
         twlTest.run();
     }

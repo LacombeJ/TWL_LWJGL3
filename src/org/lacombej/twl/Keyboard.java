@@ -33,4 +33,7 @@ public interface Keyboard {
     /** @return true if key was pressed or false if released */
     public boolean getEventKeyState();
     
+    /** @return the name of a given key */
+    public String getKeyName(int key);
+    
 }

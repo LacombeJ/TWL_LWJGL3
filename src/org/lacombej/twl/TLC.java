@@ -15,6 +15,7 @@ public class TLC {
     
     private static Window window;
     
+    /** Assigns a GLFW window id to this TLC layer */
     public static void create(long windowID) {
         window = new GLFWWindow(windowID);
     }
@@ -39,6 +40,10 @@ public class TLC {
         return window.mouse();
     }
     
+    /**
+     * From {@link org.lwjgl.opengl.GLUtil#checkGLError()}
+     * @throws OpenGLException
+     */
     public static void checkGLError() throws OpenGLException {
         int err = GL11.glGetError();
         if ( err != GL11.GL_NO_ERROR )

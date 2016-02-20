@@ -109,4 +109,14 @@ public class GLFWKeyboard implements Keyboard {
         return Arrays.copyOf(keys,keyCount);
     }
 
+    //This will be fixed later TODO
+    @Override
+    public String getKeyName(int key) {
+        String name = "";
+        if (key<256) {
+            name += (char)key;
+        }
+        return name + "("+key+")";
+    }
+
 }

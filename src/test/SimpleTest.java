@@ -65,6 +65,8 @@ public class SimpleTest {
     static final String WITH_TITLE = "resizableframe-title";
     static final String WITHOUT_TITLE = "resizableframe";
 
+    static Window window;
+    
     static class StyleItem {
         public final String theme;
         public final String name;
@@ -90,13 +92,10 @@ public class SimpleTest {
         "guiTheme.xml"
     };
 
-    private Window window;
-    
     protected boolean closeRequested;
     protected ThemeManager theme;
     protected LWJGLRenderer renderer;
     protected GUI gui;
-    protected VideoSettings.CallbackReason vidDlgCloseReason;
     protected PersistentIntegerModel curThemeIdx;
 
     public SimpleTest() {
@@ -132,8 +131,9 @@ public class SimpleTest {
 
     private void createDisplay() {
         window = new Window("TWL Examples");
-        
+
         TLC.create(window.id);
+        
         //Display.setResizable(true);
     }
 
@@ -146,7 +146,7 @@ public class SimpleTest {
         gui = new GUI(root, renderer);
 
         loadTheme();
-        
+
         WidgetsDemoDialog1 dlg1 = new WidgetsDemoDialog1();
         root.desk.add(dlg1);
         dlg1.adjustSize();
@@ -202,7 +202,7 @@ public class SimpleTest {
         settingsDlg.setTheme("settingdialog");
         //settingsDlg.add(settings);
         settingsDlg.setCloseOnClickedOutside(false);
-
+        //settings.setTheme("settings");
 
         root.addButton("Exit", new Runnable() {
             public void run() {
@@ -256,25 +256,25 @@ public class SimpleTest {
             if(root.reduceLag) {
                 TestUtils.reduceInputLag();
             }
-
+            /*
             if(!isApplet && vidDlgCloseReason == VideoSettings.CallbackReason.ACCEPT) {
-                //settings.storeSettings();
-                //VideoMode vm = settings.getSelectedVideoMode();
-                //gui.destroy();
-                //renderer.getActiveCacheContext().destroy();
-                //window.destroy();
-                //createDisplay(vm);
-                //loadTheme();
-                System.out.println("???");
+                settings.storeSettings();
+                VideoMode vm = settings.getSelectedVideoMode();
+                gui.destroy();
+                renderer.getActiveCacheContext().destroy();
+                Display.destroy();
+                createDisplay(vm);
+                loadTheme();
             }
-            vidDlgCloseReason = null;
+            */
+            //vidDlgCloseReason = null;
 
             if(!TLC.window().isActive()) {
                 gui.clearKeyboardState();
                 gui.clearMouseState();
             }
             
-            //If window is not visible / is hidden
+            //if window is not visible
             if(false) {
                 try {
                     Thread.sleep(100);
