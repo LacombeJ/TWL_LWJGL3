@@ -9,6 +9,7 @@ import java.util.HashMap;
 import org.lacombej.twl.Keyboard;
 import org.lacombej.twl.Window;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import de.matthiasmann.twl.Event;
 

@@ -6,6 +6,7 @@ import org.lacombej.twl.Mouse;
 import org.lacombej.twl.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 /**
  * Window class for TLC
@@ -19,27 +20,33 @@ public class GLFWWindow implements Window {
     private final GLFWKeyboard keyboard;
     private final GLFWMouse mouse;
     
-    private final IntBuffer buffer0;
-    private final IntBuffer buffer1;
-    
     private int width;
     private int height;
+    
+    private final GLFWWindowSizeCallback windowSizeCallback;
     
     public GLFWWindow(long windowID) {
         id = windowID;
         keyboard = new GLFWKeyboard(this);
         mouse = new GLFWMouse(this);
-        buffer0 = BufferUtils.createIntBuffer(1);
-        buffer1 = BufferUtils.createIntBuffer(1);
+        IntBuffer bWidth = BufferUtils.createIntBuffer(1);
+        IntBuffer bHeight = BufferUtils.createIntBuffer(1);
+        GLFW.glfwGetWindowSize(id,bWidth,bHeight);
+        width = bWidth.get(0);
+        height = bHeight.get(0);
+        windowSizeCallback = new GLFWWindowSizeCallback() {
+            @Override
+            public void invoke(long window, int w, int h) {
+                width = w;
+                height = w;
+            }   
+        };
+        GLFW.glfwSetWindowSizeCallback(id,windowSizeCallback);
     }
 
     @Override
     public void update() {
-        GLFW.glfwGetWindowSize(id,buffer0,buffer1);
-        width = buffer0.get(0);
-        height = buffer1.get(0);
         keyboard.update();
-        mouse.update();
     }
 
     @Override

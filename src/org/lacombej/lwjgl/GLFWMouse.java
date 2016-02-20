@@ -6,6 +6,8 @@ import org.lacombej.twl.Mouse;
 import org.lacombej.twl.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import de.matthiasmann.twl.Event;
@@ -19,51 +21,42 @@ import de.matthiasmann.twl.Event;
 public class GLFWMouse implements Mouse {
 
     private final Window window;
-    private final int[] eventButtons;
     
     private final ArrayDeque<ButtonEvent> eventQueue = new ArrayDeque<>();
     private ButtonEvent event = null;
     
-    private final DoubleBuffer xBuffer;
-    private final DoubleBuffer yBuffer;
-    
     private int x;
     private int y;
     
-    @SuppressWarnings("unused")
     private final GLFWScrollCallback scrollCallback;
-    private int scrollDY;
+    private final GLFWCursorPosCallback cursorPosCallback;
+    private final GLFWMouseButtonCallback mouseButtonCallback;
     
     public GLFWMouse(Window window) {
         this.window = window;
-        eventButtons = new int[]{Event.MOUSE_LBUTTON, Event.MOUSE_RBUTTON, Event.MOUSE_MBUTTON};
-        xBuffer = BufferUtils.createDoubleBuffer(1);
-        yBuffer = BufferUtils.createDoubleBuffer(1);
         scrollCallback = new GLFWScrollCallback() {
             @Override
             public void invoke(long windowid, double xoffset, double yoffset) {
-                scrollDY = (int) yoffset;
+                eventQueue.add(new ButtonEvent(-1,x,y,toInt(yoffset),false));
             }
         };
-    }
-    
-    /** Called every frame */
-    public void update() {
-        GLFW.glfwGetCursorPos(window.id(),xBuffer,yBuffer);
-        x = (int) Math.floor(xBuffer.get(0));
-        y = (int) Math.floor(yBuffer.get(0));
-        y = window.height() - y;
-        for (int i=0; i<eventButtons.length; i++) {
-            int action = GLFW.glfwGetMouseButton(window.id(), eventButtons[i]);
-            switch (action) {
-            case GLFW.GLFW_PRESS:
-                eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,true));
-                break;
-            case GLFW.GLFW_RELEASE:
-                eventQueue.add(new ButtonEvent(eventButtons[i],x,y,scrollDY,false));
-                break;
+        cursorPosCallback = new GLFWCursorPosCallback() {
+            @Override
+            public void invoke(long windowid, double xpos, double ypos) {
+                x = toInt(xpos);
+                y = window.height() - toInt(ypos);
+                eventQueue.add(new ButtonEvent(-1,x,y,0,false));
             }
-        }
+        };
+        mouseButtonCallback = new GLFWMouseButtonCallback() {
+            @Override
+            public void invoke(long window, int button, int action, int mods) {
+                eventQueue.add(new ButtonEvent(button,x,y,0,action==GLFW.GLFW_PRESS));
+            }
+        };
+        GLFW.glfwSetScrollCallback(window.id(),scrollCallback);
+        GLFW.glfwSetCursorPosCallback(window.id(),cursorPosCallback);
+        GLFW.glfwSetMouseButtonCallback(window.id(),mouseButtonCallback);
     }
     
     @Override
@@ -118,6 +111,10 @@ public class GLFWMouse implements Mouse {
             this.dWheel = dWheel;
             this.buttonState = buttonState;
         }
+    }
+    
+    private static int toInt(double d) {
+        return (int) Math.floor(d);
     }
 
 }
