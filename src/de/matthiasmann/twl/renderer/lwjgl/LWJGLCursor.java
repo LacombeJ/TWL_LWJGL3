@@ -33,10 +33,13 @@ import de.matthiasmann.twl.renderer.MouseCursor;
 import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWimage;
+import org.lwjgl.system.MemoryUtil;
 
 /**
  *
  * @author Matthias Mann
+ * @author Jonathan Lacombe
  */
 class LWJGLCursor implements MouseCursor {
 
@@ -48,33 +51,33 @@ class LWJGLCursor implements MouseCursor {
 
         //capacity*4 for each r,g,b,a byte
         ByteBuffer buf = BufferUtils.createByteBuffer(dstSize*dstSize*4);
-        for(int row=height,dstPos=0 ; row-->0 ; dstPos+=dstSize) {
+        for(int row=height; row-->0; ) {
+            
             int offset = srcStride * (y+row) + x * srcFmt.getPixelSize();
-            buf.position(dstPos);
-
+            
             switch(srcFmt) {
             case RGB:
-                for(byte col=0 ; col<width ; col++) {
-                    buf.put(src.get(offset + col*3 + 0));
-                    buf.put(src.get(offset + col*3 + 1));
-                    buf.put(src.get(offset + col*3 + 2));
-                    buf.put((byte)255);
+                for(int col=width-1 ; col>=0 ; col--) {
+                    buf.put((byte) (src.get(offset + col*3 + 0) & 255));
+                    buf.put((byte) (src.get(offset + col*3 + 1) & 255));
+                    buf.put((byte) (src.get(offset + col*3 + 2) & 255));
+                    buf.put((byte) 255);
                 }
                 break;
             case RGBA:
-                for(byte col=0 ; col<width ; col++) {
-                    buf.put(src.get(offset + col*4 + 0));
-                    buf.put(src.get(offset + col*4 + 1));
-                    buf.put(src.get(offset + col*4 + 2));
-                    buf.put(src.get(offset + col*4 + 3));
+                for(int col=width-1 ; col>=0 ; col--) {
+                    buf.put((byte) (src.get(offset + col*4 + 0) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 1) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 2) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 3) & 255));
                 }
                 break;
             case ABGR:
-                for(byte col=0 ; col<width ; col++) {
-                    buf.put(src.get(offset + col*4 + 3));
-                    buf.put(src.get(offset + col*4 + 2));
-                    buf.put(src.get(offset + col*4 + 1));
-                    buf.put(src.get(offset + col*4 + 0));
+                for(int col=width-1 ; col>=0 ; col--) {
+                    buf.put((byte) (src.get(offset + col*4 + 3) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 2) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 1) & 255));
+                    buf.put((byte) (src.get(offset + col*4 + 0) & 255));
                 }
                 break;
             default:
@@ -83,7 +86,11 @@ class LWJGLCursor implements MouseCursor {
         }
         buf.clear();
         
-        glfwCursor = GLFW.glfwCreateCursor(buf,hotSpotX,hotSpotY);
+        ByteBuffer image = GLFWimage.malloc(width,height,buf);
+        glfwCursor = GLFW.glfwCreateCursor(image,hotSpotX,hotSpotY);
+        
+        if (glfwCursor==MemoryUtil.NULL)
+            throw new RuntimeException("Error creating cursor");
         
     }
 

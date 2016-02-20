@@ -53,6 +53,7 @@ import java.util.logging.Logger;
 
 import org.lacombej.test.Window;
 import org.lacombej.twl.TLC;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import sourceviewer.JavaTextAreaModel;
 import sourceviewer.StringSyntaxHighlighter;
@@ -82,7 +83,7 @@ public final class Demo extends DesktopArea {
 
             while(window.isRunning() && !demo.quit) {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
+                
                 gui.update();
 
                 /**

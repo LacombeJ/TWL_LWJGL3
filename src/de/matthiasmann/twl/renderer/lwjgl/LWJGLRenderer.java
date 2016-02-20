@@ -483,6 +483,9 @@ public class LWJGLRenderer implements Renderer, LineRenderer {
             } else if(cursor instanceof SWCursor) {
                 TLC.window().setCursor(emptyCursor.glfwCursor);
                 swCursor = (SWCursor)cursor;
+            } else {
+                //Sets the default cursor
+                TLC.window().setCursor(0);
             }
         }
     }
