@@ -74,13 +74,13 @@ public class VideoSettings extends DialogLayout {
         640, 480,
         800, 600,
         1024, 768,
-        1280, 1024,
+        1366, 768,
         1600, 1200};
     
     public static DisplayMode[] getAvailableDisplayModes() {
-        DisplayMode[] dm = new DisplayMode[WINDOWED_MODES.length];
+        DisplayMode[] dm = new DisplayMode[WINDOWED_MODES.length/2];
         for (int i=0; i<dm.length; i++) {
-            dm[i] = new DisplayMode(WINDOWED_MODES[i],WINDOWED_MODES[i]);
+            dm[i] = new DisplayMode(WINDOWED_MODES[i*2],WINDOWED_MODES[i*2+1]);
         }
         return dm;
     }
@@ -240,7 +240,7 @@ public class VideoSettings extends DialogLayout {
             DisplayMode mode = modes.get(idx).mode;
             if(mode.width == dm.width &&
                     mode.height == dm.height) {
-                if(mode.frequency > dm.frequency) {
+                if(mode.frequency >=dm.frequency) {
                     entryToReplace = idx;
                     break;
                 } else {
@@ -249,13 +249,14 @@ public class VideoSettings extends DialogLayout {
                 }
             }
         }
-        
+       // System.out.println(modes.size());
         ModeEntry me = new ModeEntry(dm);
         if(entryToReplace >= 0) {
             modes.set(entryToReplace, me);
         } else {
             modes.add(me);
         }
+        
     }
 
     protected void fireCallback(CallbackReason reason) {

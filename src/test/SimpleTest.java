@@ -137,7 +137,7 @@ public class SimpleTest {
     Window window;
     
     private void createDisplay(VideoMode mode) {
-        window = new Window("TWL Examples");
+        window = new Window("TWL Examples",mode.mode.width,mode.mode.height,mode.fullscreen);
         
         TLC.create(window.id);
         //Display.setResizable(true);

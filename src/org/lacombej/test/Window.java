@@ -23,7 +23,7 @@ public class Window {
     @SuppressWarnings("unused")
     private static GLFWErrorCallback errorCallback;
     
-    public Window(String title, int width, int height, boolean resizable, boolean vsync) {
+    public Window(String title, int width, int height, boolean fullscreen, boolean resizable, boolean vsync) {
         GLFW.glfwSetErrorCallback(errorCallback = Callbacks.errorCallbackPrint(System.err));
         
         if (GLFW.glfwInit() == GL11.GL_FALSE) {
@@ -34,7 +34,7 @@ public class Window {
                 GL11.GL_TRUE : GL11.GL_FALSE);
         
         id = GLFW.glfwCreateWindow(width,height,title,
-                MemoryUtil.NULL,
+                fullscreen ? GLFW.glfwGetPrimaryMonitor() : MemoryUtil.NULL,
                 MemoryUtil.NULL);
         
         if (id == MemoryUtil.NULL) {
@@ -56,8 +56,12 @@ public class Window {
         }
     }
     
+    public Window(String title, int width, int height, boolean fullscreen) {
+        this(title,width,height,fullscreen,false,true);
+    }
+    
     public Window(String title, int width, int height) {
-        this(title,width,height,false,true);
+        this(title,width,height,false,false,true);
     }
     
     public Window(String title) {

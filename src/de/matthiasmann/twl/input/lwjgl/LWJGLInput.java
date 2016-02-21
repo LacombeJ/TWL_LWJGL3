@@ -65,7 +65,7 @@ public class LWJGLInput implements Input {
 
             int wheelDelta = TLC.mouse().getEventDWheel();
             if(wheelDelta != 0) {
-                gui.handleMouseWheel(wheelDelta / 120);
+                gui.handleMouseWheel(wheelDelta);
             }
         }
             
