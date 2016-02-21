@@ -7,6 +7,7 @@ import org.lacombej.twl.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Window class for TLC
@@ -76,7 +77,7 @@ public class GLFWWindow implements Window {
 
     @Override
     public boolean isActive() {
-        return GLFW.glfwGetWindowAttrib(id, GLFW.GLFW_FOCUSED) == GLFW.GLFW_FOCUSED;
+        return GLFW.glfwGetWindowAttrib(id, GLFW.GLFW_FOCUSED) == GL11.GL_TRUE;
     }
 
     @Override

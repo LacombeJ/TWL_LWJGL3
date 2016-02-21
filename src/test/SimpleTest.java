@@ -46,11 +46,15 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import de.matthiasmann.twl.model.PersistentIntegerModel;
 import de.matthiasmann.twl.model.SimpleBooleanModel;
 import de.matthiasmann.twleffects.lwjgl.LWJGLEffectsRenderer;
+import test.VideoMode.DisplayMode;
+
 import java.io.IOException;
+import java.net.URL;
 
 import org.lacombej.test.Window;
 import org.lacombej.twl.TLC;
 import org.lwjgl.opengl.GL11;
+
 
 /**
  * A simple test for TWL.
@@ -65,8 +69,6 @@ public class SimpleTest {
     static final String WITH_TITLE = "resizableframe-title";
     static final String WITHOUT_TITLE = "resizableframe";
 
-    static Window window;
-    
     static class StyleItem {
         public final String theme;
         public final String name;
@@ -84,7 +86,7 @@ public class SimpleTest {
     
     public static void main(String[] arg) {
         SimpleTest test = new SimpleTest();
-        test.run();
+        test.run(new VideoMode(new DisplayMode(WIDTH, HEIGHT), false));
     }
 
     private static final String[] THEME_FILES = {
@@ -92,13 +94,16 @@ public class SimpleTest {
         "guiTheme.xml"
     };
 
+    protected final DisplayMode desktopMode;
     protected boolean closeRequested;
     protected ThemeManager theme;
     protected LWJGLRenderer renderer;
     protected GUI gui;
+    protected VideoSettings.CallbackReason vidDlgCloseReason;
     protected PersistentIntegerModel curThemeIdx;
 
     public SimpleTest() {
+        desktopMode = new DisplayMode(800,600);
         curThemeIdx = new PersistentIntegerModel(
                 AppletPreferences.userNodeForPackage(SimpleTest.class),
                 "currentThemeIndex", 0, THEME_FILES.length, 0);
@@ -115,7 +120,7 @@ public class SimpleTest {
         // If you want fast theme switching without reloading then use the existing
         // cache context for loading the new theme and don't destroy the old theme.
         ThemeManager newTheme = ThemeManager.createThemeManager(
-            SimpleTest.class.getResource(THEME_FILES[curThemeIdx.getValue()]), renderer);
+            new URL("file:src/test/"+THEME_FILES[curThemeIdx.getValue()]), renderer);
         long duration = System.nanoTime() - startTime;
         System.out.println("Loaded theme in " + (duration/1000) + " us");
 
@@ -129,11 +134,12 @@ public class SimpleTest {
         gui.setBackground(theme.getImageNoWarning("gui.background"));
     }
 
-    private void createDisplay() {
+    Window window;
+    
+    private void createDisplay(VideoMode mode) {
         window = new Window("TWL Examples");
-
-        TLC.create(window.id);
         
+        TLC.create(window.id);
         //Display.setResizable(true);
     }
 
@@ -198,11 +204,19 @@ public class SimpleTest {
         fCS.addCloseCallback();
 
         final PopupWindow settingsDlg = new PopupWindow(root);
-        
+        final VideoSettings settings = new VideoSettings(
+                AppletPreferences.userNodeForPackage(VideoSettings.class),
+                desktopMode);
         settingsDlg.setTheme("settingdialog");
-        //settingsDlg.add(settings);
+        settingsDlg.add(settings);
         settingsDlg.setCloseOnClickedOutside(false);
-        //settings.setTheme("settings");
+        settings.setTheme("settings");
+        settings.addCallback(new CallbackWithReason<VideoSettings.CallbackReason>() {
+            public void callback(VideoSettings.CallbackReason reason) {
+                vidDlgCloseReason = reason;
+                settingsDlg.closePopup();
+            }
+        });
 
         root.addButton("Exit", new Runnable() {
             public void run() {
@@ -214,7 +228,7 @@ public class SimpleTest {
         if(!isApplet) {
             root.addButton("Settings", "Opens a dialog which might be used to change video settings", new Runnable() {
                 public void run() {
-                    //settings.readSettings();
+                    settings.readSettings();
                     settingsDlg.openPopupCentered();
                 }
             });
@@ -256,32 +270,25 @@ public class SimpleTest {
             if(root.reduceLag) {
                 TestUtils.reduceInputLag();
             }
-            /*
+
+            
             if(!isApplet && vidDlgCloseReason == VideoSettings.CallbackReason.ACCEPT) {
                 settings.storeSettings();
                 VideoMode vm = settings.getSelectedVideoMode();
                 gui.destroy();
                 renderer.getActiveCacheContext().destroy();
-                Display.destroy();
+                window.destroy();
                 createDisplay(vm);
                 loadTheme();
             }
-            */
-            //vidDlgCloseReason = null;
+            
+            vidDlgCloseReason = null;
 
             if(!TLC.window().isActive()) {
                 gui.clearKeyboardState();
                 gui.clearMouseState();
             }
             
-            //if window is not visible
-            if(false) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException unused) {
-                    Thread.currentThread().interrupt();
-                }
-            }
         }
     }
 
@@ -293,9 +300,9 @@ public class SimpleTest {
         return ta;
     }
 
-    public void run() {
+    public void run(VideoMode mode) {
         try {
-            createDisplay();
+            createDisplay(mode);
 
             mainLoop(false);
         } catch (Throwable ex) {
@@ -384,7 +391,6 @@ public class SimpleTest {
                 reduceLag ^= true;
                 System.out.println("reduceLag = " + reduceLag);
             }
-
             return super.handleEvent(evt);
         }
 
