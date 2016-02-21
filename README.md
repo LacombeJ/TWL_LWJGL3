@@ -3,13 +3,7 @@
 
 This project is a port of Matthias Mann's TWL, an amazing GUI library, to LWJGL 3.
 
-The test cases included work with no major errors.
+All test cases included in the project worked but one which I'm working on right now.
 
-<b>Things to be fixed:</b>
-- Correct input for text
-- Other unknown issues
-
-<b>Test cases to be fixed:</b>
-- source viewer demo (numbered lines don't appear)
-- GameUIDemo2 (tooltips don't appear)
+<b>Test case to be fixed:</b>
 - test package (some files not included, found http://twl.l33tlabs.org/) 
