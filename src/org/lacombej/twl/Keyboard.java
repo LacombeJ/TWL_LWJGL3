@@ -2,6 +2,13 @@ package org.lacombej.twl;
 
 /**
  * Interface for a Keyboard
+ * <p>
+ * A Keyboard event is queued in the following conditions:
+ * <ul>
+ * <li>Key pressed: KeyEvent(key,char,true)</li>
+ * <li>Key button released: KeyEvent(key,'\0',false)</li>
+ * <ul>
+ * </p>
  * 
  * @author Jonathan Lacombe
  *

@@ -2,6 +2,15 @@ package org.lacombej.twl;
 
 /**
  * Interface for a Mouse
+ * <p>
+ * A Mouse event is queued in the following conditions:
+ * <ul>
+ * <li>Middle button scrolled: MouseEvent(-1,x,y,offset,false)</li>
+ * <li>Mouse is moved: MouseEvent(-1,x,y,0,false)</li>
+ * <li>Mouse button clicked: MouseEvent(button,x,y,0,true)</li>
+ * <li>Mouse button released: MouseEvent(button,x,y,0,false)</li>
+ * <ul>
+ * </p>
  * 
  * @author Jonathan Lacombe
  *

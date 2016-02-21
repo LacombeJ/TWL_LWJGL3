@@ -1,6 +1,9 @@
 package org.lacombej.lwjgl;
 
 import java.nio.IntBuffer;
+import java.util.ArrayDeque;
+
+import org.lacombej.lwjgl.GLFWMouse.ButtonEvent;
 import org.lacombej.twl.Keyboard;
 import org.lacombej.twl.Mouse;
 import org.lacombej.twl.Window;
@@ -24,6 +27,9 @@ public class GLFWWindow implements Window {
     private int width;
     private int height;
     
+    private final ArrayDeque<WindowEvent> eventQueue = new ArrayDeque<>();
+    private WindowEvent event = null;
+    
     private final GLFWWindowSizeCallback windowSizeCallback;
     
     public GLFWWindow(long windowID) {
@@ -38,8 +44,7 @@ public class GLFWWindow implements Window {
         windowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int w, int h) {
-                width = w;
-                height = w;
+                eventQueue.add(new WindowEvent(width=w,height=h));
             }   
         };
         GLFW.glfwSetWindowSizeCallback(id,windowSizeCallback);
@@ -83,6 +88,34 @@ public class GLFWWindow implements Window {
     @Override
     public void setCursor(long cursorID) {
         GLFW.glfwSetCursor(id, cursorID);
+    }
+    
+    @Override
+    public boolean next() {
+        if (!eventQueue.isEmpty()) {
+            event = eventQueue.removeFirst();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getEventWidth() {
+        return event.width;
+    }
+
+    @Override
+    public int getEventHeight() {
+        return event.height;
+    }
+    
+    public class WindowEvent {
+        int width;
+        int height;
+        public WindowEvent(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
     }
     
 
